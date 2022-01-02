@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { fetchPosts } from '../actions';
-
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { fetchPosts } from "../actions";
 
 class PostList extends Component {
 
+  componentDidMount(){
+    this.props.fetchPosts();
+  }
+  
   render() {
-    return (
-      <div>
-        Post Test
-      </div>
-    )
+    return <div>Post Test</div>;
   }
 }
-
-export default connect(null, {fetchPosts})(PostList);
+// null because we dont have any state yet (just place holder atm)
+// fetchPosts is Action creator
+export default connect(null, { fetchPosts })(PostList);
