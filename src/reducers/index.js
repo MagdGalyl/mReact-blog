@@ -1,6 +1,6 @@
-import {combineReducers } from 'redux';
+import { combineReducers } from "redux";
+import postsReducer from "./postsReducer.js";
 
-export default combineReducers ({
-  replaceMe: () => 'hi There'
+export default combineReducers({
+  posts: postsReducer,
 });
-
