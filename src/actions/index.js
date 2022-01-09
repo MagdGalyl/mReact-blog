@@ -1,13 +1,30 @@
 import _ from "lodash";
 import jsonPlaceHolder from "../apis/jsonPlaceHolder";
 
-//---------------- FETCH POSTS-USER SOLUTION --------------- //
+// --------------- FETCH POSTS-USER SOLUTION --------------- //
 
-export const fetchPostsAndUser = () => async (dispatch) => {
-  
+// export const fetchPostsAndUsers = () => async (dispatch, getState) => {
+//   await dispatch(fetchPosts());
+//   const userIds = _.uniq(_.map(getState().posts, "userId"));
+//   // console.log(getState().posts);
+//   // console.log(userIds);
+
+//   //note that async/await dont work with foreach loop
+//   userIds.forEach((id) => dispatch(fetchUser(id)));
+// };
+
+// REFACTORED with lodash chain
+export const fetchPostsAndUsers = () => async (dispatch, getState) => {
+  await dispatch(fetchPosts());
+
+  _.chain(getState().posts)
+    .map("userId")
+    .uniq()
+    .forEach((id) => dispatch(fetchUser(id)))
+    .value();
 };
 
-//---------------- fetchPosts --------------- //
+// --------------- fetchPosts --------------- //
 export const fetchPosts = () => {
   return async (dispatch) => {
     const response = await jsonPlaceHolder.get("/posts");
@@ -29,6 +46,13 @@ export const fetchPosts = () => {
 //   });
 // };
 
+//---------------- ORIGINAL FETCH USER --------------- //
+
+export const fetchUser = (id) => async (dispatch) => {
+  const response = await jsonPlaceHolder.get(`/users/${id}`);
+  dispatch({ type: "FETCH_USER", payload: response.data });
+};
+
 //---------------- MEMOIZE FETCH USER SOLUTION --------------- //
 // export const fetchUser = (id) => async (dispatch) => {
 //   _fetchUser(id, dispatch);
@@ -42,10 +66,3 @@ export const fetchPosts = () => {
 //   const response = await jsonPlaceHolder.get(`/users/${id}`);
 //   dispatch({ type: "FETCH_USER", payload: response.data });
 // });
-
-//---------------- ORIGINAL FETCH USER --------------- //
-
-export const fetchUser = (id) => async (dispatch) => {
-  const response = await jsonPlaceHolder.get(`/users/${id}`);
-  dispatch({ type: "FETCH_USER", payload: response.data });
-};
